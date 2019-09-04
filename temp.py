@@ -1,5 +1,5 @@
 # Author: Evren Korkmaz
-# This project read the value on DHT11 sensor and send the value to remove server da$
+# This project read the value on DHT11 sensor and send the value to remove server database.
 
 import ipinfo     # locatiom lib
 import grovepi    # grove pi shield lib
@@ -7,9 +7,10 @@ import smtplib    # stmp mail lib
 dht_sensor_port=4 # sensor port D4
 dht_sensor_type=0 # sensor type DHT11-> 0 DHT22-> 1
 data=open('data.txt','w') #open file for write
-[ temp,hum ] = grovepi.dht(dht_sensor_port,dht_sensor_type) # take value with grobep$
-                                                            # define the value integ$
-print ('Temp: '+ str(temp) + '*C' + '\tHumidity:' + ' %'+ str(hum)) # Print the valu$
+[ temp,hum ] = grovepi.dht(dht_sensor_port,dht_sensor_type) # take value with grobepi.dht function
+							                                              # define the value integer temp and hum
+
+print ('Temp: '+ str(temp) + '*C' + '\tHumidity:' + ' %'+ str(hum)) # Print the value for informing the user
 
 # this part for the location information
 access_token = '9d363e5856b384'          # token value from ipinfo.io
@@ -18,7 +19,7 @@ ip_address = '185.136.56.2'              # ip addres to this pc
 details = handler.getDetails(ip_address) #define the location value on details
 
 location=details.org
-location=location.replace(" ", "\ ") # change the white spaceses to \ because influx$
+location=location.replace(" ", "\ ") # change the white spaceses to \ because influxdb data type 
 
 # write the value on data.txt
 data.write('temperature,location='+ location + ' temp='+ str(temp))
