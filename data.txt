@@ -1,0 +1,2 @@
+temperature,location=AS50055\ Hurkus\ Havayolu\ Tasimacilik\ ve\ Ticaret\ A.S. temp=24.0
+temperature,location=AS50055\ Hurkus\ Havayolu\ Tasimacilik\ ve\ Ticaret\ A.S. hum=21.0
