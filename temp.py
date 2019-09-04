@@ -8,7 +8,7 @@ dht_sensor_port=4 # sensor port D4
 dht_sensor_type=0 # sensor type DHT11-> 0 DHT22-> 1
 data=open('data.txt','w') #open file for write
 [ temp,hum ] = grovepi.dht(dht_sensor_port,dht_sensor_type) # take value with grobepi.dht function
-							                                              # define the value integer temp and hum
+							    # define the value integer temp and hum
 
 print ('Temp: '+ str(temp) + '*C' + '\tHumidity:' + ' %'+ str(hum)) # Print the value for informing the user
 
