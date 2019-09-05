@@ -4,22 +4,49 @@
 import ipinfo     # locatiom lib
 import grovepi    # grove pi shield lib
 import smtplib    # stmp mail lib
-dht_sensor_port=4 # sensor port D4
+# grovepi.dht
+dht_sensor_port=4 # sensor port "D4". Check with "sudo i2cdetect -y 1" command
 dht_sensor_type=0 # sensor type DHT11-> 0 DHT22-> 1
-data=open('data.txt','w') #open file for write
-[ temp,hum ] = grovepi.dht(dht_sensor_port,dht_sensor_type) # take value with grobepi.dht function
-							    # define the value integer temp and hum
 
-print ('Temp: '+ str(temp) + '*C' + '\tHumidity:' + ' %'+ str(hum)) # Print the value for informing the user
+# ipinfo.io
+# create a user on ipinfo.io for location information
+# when sign in ipinfo take a access token for your user.
+access_token = '12345678987654'
+ip_address = 'xx.xx.xx.xx' #your local ip
 
-# this part for the location information
-access_token = '9d363e5856b384'          # token value from ipinfo.io
+# smtp
+# this program send a mail for some temp or hum value
+# Because of first define a sender and destination mail information
+sender_mail='sender-mail@gmail.com'
+sender_mail_passwd='sender-passwd'
+destination_mail='dest-mail@gmail.com'
+
+#alarm
+# define a max and min values
+max_temp=25
+min_temp=15
+max_hum=35
+min_hum=15
+
+#open file for write
+data=open('data.txt','w')
+
+# take value with grobepi.dht function
+# define the value integer temp and hum
+[ temp,hum ] = grovepi.dht(dht_sensor_port,dht_sensor_type)
+
+# Print the value for informing the user
+print ('Temp: '+ str(temp) + '*C' + '\tHumidity:' + ' %'+ str(hum) + ' ' + str(time.strftime("%s",time.gmtime())))
+
+# ipinfo.io
+# This part take the location information.
 handler = ipinfo.getHandler(access_token)
-ip_address = '185.136.56.2'              # ip addres to this pc
-details = handler.getDetails(ip_address) #define the location value on details
-
+details = handler.getDetails(ip_address)
 location=details.org
-location=location.replace(" ", "\ ") # change the white spaceses to \ because influxdb data type 
+# Influxdb insert syntax too complicated
+# When add a space on the location, influxdb take a different value any word
+# change the white spaceses to \ because influxdb data type
+location=location.replace(" ", "\ ")
 
 # write the value on data.txt
 data.write('temperature,location='+ location + ' temp='+ str(temp))
@@ -28,22 +55,24 @@ data.write('temperature,location='+ location + ' hum='+ str(hum))
 
 
 # mail function
-def mail(content):
+def mail(msg):
     mail = smtplib.SMTP("smtp.gmail.com",587) 
     mail.starttls()
-    mail.login('gozenintern@gmail.com','iskenHub123**')
-    mail.sendmail("gozenintern@gmail.com","muhammetkrn19@gmail.com",content)
+    mail.login(sender_mail,sender_mail_passwd)
+    mail.sendmail(sender_mail,destination_mail,msg)
+
 
 # alert values
-if temp>=21.0: 
-    content = 'Oda sicakligi ' + str(temp) + '*C' + ' Sicaklik yuksek!'
-    mail(content)
-elif temp<=15:
-    content = 'Oda sicakligi ' + str(temp) + '*C' + ' Sicakligi artirmaniz onerilir.'
-    mail(content)
-elif hum >=35:
-    content = 'Odadaki nem orani  %' +  str(hum)  + ' Nem orani cok yuksek!'
-    mail(content)
-elif hum <=15:
-    content = 'Odadaki nem orani  %' +  str(hum)  + ' Nem orani cok dusuk!'
-    mail(content)
+if temp>=max_temp:
+    msg = 'Room temperature ' + str(temp) + '*C' + ' Too Hot!'
+    mail(msg)
+elif temp<=min_temp:
+    msg = 'Room temperature ' + str(temp) + '*C' + ' Too Cold!'
+    mail(msg)
+elif hum >=max_hum:
+    msg = 'Room humidity  %' +  str(hum)  + ' Too High!'
+    mail(msg)
+elif hum <=min_hum:
+    msg = 'Room humidity  %' +  str(hum)  + ' Too Low!'
+    mail(msg)
+
