@@ -39,6 +39,8 @@ Sensor on the D4 port
  git clone https://github.com/evrenkorkmaz/raspberry-dht11-project.git
  ```
  
+ 
+ 
  Install Docker ( on Rasbppery or Remote Server)
  
  ```
@@ -80,7 +82,7 @@ In the curl line must the add your Influxdb databse ip adresses and databse name
 curl -i -XPOST "http://xxx.xxx.xxx.xxx:8086/write?db=db_name" --data-binary @data.txt
 ```
  Should the check some value before run script
- ```
+ ```python
 # grovepi.dht
 dht_sensor_port=4 # Add your sensor port 
 dht_sensor_type=0 # sensor type DHT11-> 0 DHT22-> 1
@@ -104,10 +106,21 @@ min_temp=15
 max_hum=35
 min_hum=15
  ```
- And then 
- 
- 
- 
+ And then Start temp.sh Script
+  ```
+  ./temp.sh
+   ```
+ For the background 
+  ```
+  ./temp.sh >&/dev/null &
+  ```
+ Now create a panel for the graph on Grafana
+  ```
+  http://grafana.server.ip.address:3000
+  ```
+ Default User: admin Passwd: admin
+ Fisrt step click"Add Data Source" and select Influxdb and define Influxdb databse api link (http://influxdb.server.ip.address:8086) and databse name.
+ Second step click "New Dashboard" and than click "Add panel" and "Add Query".
  
  
  
