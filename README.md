@@ -121,7 +121,10 @@ min_hum=15
  Default User: admin Passwd: admin
  Fisrt step click"Add Data Source" and select Influxdb and define Influxdb databse api link (http://influxdb.server.ip.address:8086) and databse name.
  Second step click "New Dashboard" and than click "Add panel" and "Add Query".
+ Change the settings like that and save.
  
+ 
+ ![alt text](grafpanel.png)
  
  
  
