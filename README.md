@@ -45,10 +45,26 @@ Sensor on the D4 port
  
  ```
 sudo apt-get update
-sudo apt-get install docker.io
+sudo apt-get install docker.io docker-compose
 sudo systemctl start docker
+
 ```
-Pull and Run Influxdb (Port 8083 - Web Page -- Port 8086 - Influxdb API )
+# Automaticly Pull and Run Influxdb and Grafana
+If u use Remote sever for Docker, clone the repo 
+ ```
+ git clone https://github.com/evrenkorkmaz/raspberry-dht11-project.git
+ ```
+Run this command for grafana volume.
+```
+  sudo mkdir -p /srv/docker/grafana/data
+  chown 472:472 /srv/docker/grafana/data
+  ```
+
+ Run this command in docker-compose.yml directory
+  ```
+  sudo docker-compose up -d
+  ```
+ # Manuel: Pull and Run Influxdb (Port 8083 - Web Page -- Port 8086 - Influxdb API )
 
 ```
 sudo docker pull influxdb
@@ -58,11 +74,6 @@ Check the Influxdb Web Page On 8083 Port
 ```
 http://influxdb.server.ip.address:8083
 ```
-Create a Database on Influxdb 
-```
-Query: CREATE DATABASE "db-name"
-```
-
 Pull and Run Grafana 
 ```
 sudo docker pull grafana/grafana
@@ -73,6 +84,12 @@ Check the Grafana Web Page On 3000 Port
 http://grafana.server.ip.address:3000
 ```
 Default User: admin Passwd: admin
+
+
+Create a Database on Influxdb 
+```
+Query: CREATE DATABASE "db-name"
+```
 
 Now start the temp.sh Script on Raspberry Pi
 But First check on the Script
